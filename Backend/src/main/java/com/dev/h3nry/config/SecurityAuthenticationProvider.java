@@ -8,7 +8,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 
 @Configuration
 @RequiredArgsConstructor
-public class AuthenticationProvider {
+public class SecurityAuthenticationProvider {
     private final AppUserDetailsService userDetailsService;
     private final SecurityPasswordEncoder passwordEncoder;
 

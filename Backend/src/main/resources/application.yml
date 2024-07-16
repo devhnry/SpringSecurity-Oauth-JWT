@@ -1,5 +1,7 @@
 spring:
   application:
     name: "springsecurity"
+  profiles:
+    active: dev
 server:
   port: 9095
