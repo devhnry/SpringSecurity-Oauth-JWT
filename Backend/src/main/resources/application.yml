@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: "springsecurity"
+server:
+  port: 9095

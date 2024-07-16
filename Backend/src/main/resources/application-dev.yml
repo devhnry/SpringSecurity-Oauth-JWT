@@ -1,0 +1,29 @@
+spring:
+  mail:
+    host: ${EMAIL_SMTP_HOST} # smtp.gmail.com, smtp-mail.outlook.com, smtp.office365.com
+    port: 465
+    username: ${EMAIL_SENDER:}
+    password: ${EMAIL_PASSWORD}
+    properties:
+      mail:
+        transport:
+          protocol: smtp
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          ssl:
+            enable: true
+  config:
+    activate:
+      on-profile: "dev"
+  datasource:
+    url: jdbc:mysql://localhost:3306/springsecurity
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+secretString: "HFUKNSF09839IKSFV9348J39GHIUEWFJR9EF089WUJ4FNR9HG738UJW4ONEMSCO"
