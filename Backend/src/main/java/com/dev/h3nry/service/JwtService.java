@@ -2,9 +2,7 @@ package com.dev.h3nry.service;
 
 import com.dev.h3nry.entity.AppUser;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import static io.jsonwebtoken.SignatureAlgorithm.HS256;
