@@ -48,9 +48,6 @@ public class Oauth2SuccessHandler implements AuthenticationSuccessHandler {
 
         /* Gets the OauthUser from Authentication */
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-        OAuth2AuthorizedClient authorizedClient = authorizedClientService.loadAuthorizedClient(
-                clientRegistrationId, authentication.getName()
-        );
 
         /* Handle the successful authentication and generate auth token for use */
         Optional<AppUser> existingUser = userRepository.findAppUserByEmail(oAuth2User.getAttribute("email"));

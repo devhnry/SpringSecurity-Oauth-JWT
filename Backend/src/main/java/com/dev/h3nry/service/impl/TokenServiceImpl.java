@@ -1,6 +1,7 @@
 package com.dev.h3nry.service.impl;
 
 import com.dev.h3nry.entity.AuthToken;
+import com.dev.h3nry.repository.TokenRepository;
 import com.dev.h3nry.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,7 @@ import java.time.temporal.ChronoUnit;
 public class TokenServiceImpl implements TokenService {
 
     private final OAuth2AuthorizedClientService authorizedClientService;
+    private final TokenRepository tokenRepository;
 
     /**
      * Called by the Oauth2SuccessHandler to Generate AuthToken from the Authorized Client
@@ -75,6 +77,14 @@ public class TokenServiceImpl implements TokenService {
         authToken.setIssuedAt(accessToken.getIssuedAt());
         authToken.setRefreshToken(refreshToken.getTokenValue());
         log.info("Token has been created successfully");
+
+        try {
+            tokenRepository.save(authToken);
+            log.info("Token has been saved to the DB successfully");
+        } catch (Exception e) {
+            log.error("Error while saving token: {}", e.getMessage());
+            throw new RuntimeException(e);
+        }
 
         return authToken;
     }
