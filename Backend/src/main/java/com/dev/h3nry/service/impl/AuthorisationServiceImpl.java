@@ -1,11 +1,11 @@
 package com.dev.h3nry.service.impl;
 
-import com.dev.h3nry.dto.AuthSuccessResponseDto;
-import com.dev.h3nry.dto.DefaultResponseDto;
-import com.dev.h3nry.dto.LoginRequestDto;
-import com.dev.h3nry.dto.SignUpRequestDto;
+import com.dev.h3nry.dto.*;
+import com.dev.h3nry.entity.AppUser;
 import com.dev.h3nry.entity.AuthToken;
+import com.dev.h3nry.enums.SignUpMethod;
 import com.dev.h3nry.repository.TokenRepository;
+import com.dev.h3nry.repository.UserRepository;
 import com.dev.h3nry.service.AuthorisationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +20,7 @@ import java.util.Optional;
 public class AuthorisationServiceImpl implements AuthorisationService {
 
     private final TokenRepository tokenRepository;
+    private final UserRepository userRepository;
 
     @Override
     public DefaultResponseDto<AuthSuccessResponseDto> authoriseSuccess(Authentication authentication) {
@@ -50,7 +51,38 @@ public class AuthorisationServiceImpl implements AuthorisationService {
     }
 
     @Override
-    public DefaultResponseDto<AuthSuccessResponseDto> signup(SignUpRequestDto signUpRequestDto) {
+    public DefaultResponseDto<AppUserDto> signup(SignUpRequestDto signUpRequestDto) {
+        DefaultResponseDto<AppUserDto> response = new DefaultResponseDto<>();
+
+        AppUser user = new AppUser().builder()
+                .name(signUpRequestDto.getFullName())
+                .email(signUpRequestDto.getEmail())
+                .password(signUpRequestDto.getPassword())
+                .username(signUpRequestDto.getUsername())
+                .signUpMethod(SignUpMethod.JWT)
+                .build();
+        
+        AppUser savedUser = userRepository.save(user);
+
+        response.setStatusCode(HttpStatus.CREATED.value());
+        response.setMessage("Successfully Signed Up");
+        response.setData(toDto(savedUser));
+
         return null;
+    }
+
+    public static AppUserDto toDto(AppUser appUser) {
+        if (appUser == null) return null;
+        return new AppUserDto(
+                appUser.getUserId(),
+                appUser.getName(),
+                appUser.getUsername(),
+                appUser.getEmail(),
+                appUser.getGitLabId(),
+                appUser.getGitHubId(),
+                appUser.getSignUpMethod(),
+                appUser.getCreatedAt(),
+                appUser.getUpdatedAt()
+        );
     }
 }

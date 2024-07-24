@@ -40,9 +40,13 @@ public class AppUser implements UserDetails {
     @Builder.Default
     private Boolean isActive = true;
 
-    /* This will allow us to easily use the API */
+    /* This will allow us to easily use the API for GitLab*/
     @Column(name = "gitlab_id", nullable = false, unique = true)
     private String gitLabId;
+
+    /* This will allow us to easily use the API for GitHub */
+    @Column(name = "github_id", nullable = false, unique = true)
+    private String gitHubId;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

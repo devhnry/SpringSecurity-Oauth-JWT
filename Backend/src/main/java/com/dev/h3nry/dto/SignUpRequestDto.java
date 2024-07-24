@@ -8,6 +8,7 @@ import lombok.Data;
 @JsonIgnoreProperties
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SignUpRequestDto {
+    private String fullName;
     private String email;
     private String password;
     private String username;
