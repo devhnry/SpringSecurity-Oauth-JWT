@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/api/v1")
 public class AuthorisationController {
 
-    @GetMapping("/demo")
+    @GetMapping("/dashboard")
     public ResponseEntity<String> getAuthorisation() {
         return ResponseEntity.ok("Welcome to this Demo APPLICATION");
     }

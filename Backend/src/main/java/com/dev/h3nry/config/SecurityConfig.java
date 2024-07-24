@@ -1,5 +1,7 @@
 package com.dev.h3nry.config;
 
+import com.dev.h3nry.service.LogOutHandler;
+import com.dev.h3nry.service.Oauth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +11,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -16,26 +19,50 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
+
     private final SecurityAuthenticationProvider securityAuthenticationProvider;
     private final JwtSecurityFilter jwtSecurityFilter;
+    private final Oauth2SuccessHandler oauth2SuccessHandler;
+    private final LogOutHandler logOutHandler;
 
+    /**
+     * Security configuration for HTTP requests, session management, and login/logout handling.
+     */
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
+
+                /* Allow unrestricted access to certain endpoints */
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers("/**").permitAll()
+                        .requestMatchers("/", "/login**", "/error**").permitAll()
                         .anyRequest().authenticated()
-                ).sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                )
+
+                /* Manage session creation policy for JWT-based authentication */
+                .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(securityAuthenticationProvider.authenticationProvider())
                 .addFilterBefore(jwtSecurityFilter, UsernamePasswordAuthenticationFilter.class)
-                .oauth2Login(oauth2login ->oauth2login
-                        .loginPage("/")
-                        .defaultSuccessUrl("/auth/**", true)
+
+                /* Configure OAuth2 login and success handling */
+                .oauth2Login(oauth2login -> oauth2login
+                        .defaultSuccessUrl("/api/v1/dashboard", true)
+                        .successHandler(oauth2SuccessHandler)
+                )
+                /* Handles the logout logic for both JWT and OAuth */
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/login")
+                        .addLogoutHandler(logOutHandler)
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            SecurityContextHolder.clearContext();
+                        })
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                        .deleteCookies("JSESSIONID")
                 )
                 .build();
     }
 
+    /** Provides the AuthenticationManager bean used for authentication. */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
