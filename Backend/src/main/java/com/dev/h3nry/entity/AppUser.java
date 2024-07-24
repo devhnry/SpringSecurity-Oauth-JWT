@@ -1,5 +1,6 @@
 package com.dev.h3nry.entity;
 
+import com.dev.h3nry.enums.SignUpMethod;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -27,7 +28,7 @@ public class AppUser implements UserDetails {
     @Column(name = "username", nullable = false, unique = true)
     private String username;
 
-    @Column(name = "password", nullable = false, unique = true)
+    @Column(name = "password", unique = true)
     private String password;
 
     @Column(name = "email", nullable = false, unique = true)
@@ -48,6 +49,9 @@ public class AppUser implements UserDetails {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @Enumerated(EnumType.STRING)
+    private SignUpMethod signUpMethod;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
