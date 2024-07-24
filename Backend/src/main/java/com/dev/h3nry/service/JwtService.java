@@ -39,7 +39,7 @@ public class JwtService{
 
     private String generateToken(AppUser user) {
         return Jwts.builder()
-                .claim("userID", user.getId())
+                .claim("userID", user.getUserId())
                 .claim("username", user.getUsername())
                 .setSubject(user.getUsername())
                 .setIssuedAt(Date.from(Instant.now()))
@@ -50,7 +50,7 @@ public class JwtService{
 
     public String generateRefreshToken(HashMap<String, Object> claims, AppUser user){
         return Jwts.builder()
-                .claim("userId", user.getId())
+                .claim("userId", user.getUserId())
                 .setClaims(claims)
                 .setSubject(user.getUsername())
                 .setIssuedAt(Date.from(Instant.now()))
