@@ -58,15 +58,12 @@ public class Oauth2SuccessHandler implements AuthenticationSuccessHandler {
             log.info("Generated AuthToken {}", authToken);
 
             /* Should "redirect" them here after Successful Signup ONLY ( nothing else ) */
-            response.sendRedirect("/api/v1/success");
+            response.sendRedirect("/success");
 
         }else{
-            /* Redirects them to the leaderboard since they are already a user */
-            response.sendRedirect("/api/v1/leaderboard");
+            /* Redirect or forward to a specific URL after successful authentication */
+            response.sendRedirect("/dashboard");
         }
-
-        /* Redirect or forward to a specific URL after successful authentication */
-        response.sendRedirect("/api/v1/dashboard");
 
     }
 }

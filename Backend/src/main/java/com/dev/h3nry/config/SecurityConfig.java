@@ -45,7 +45,7 @@ public class SecurityConfig {
 
                 /* Configure OAuth2 login and success handling */
                 .oauth2Login(oauth2login -> oauth2login
-                        .defaultSuccessUrl("/api/v1/dashboard", true)
+                        .defaultSuccessUrl("/dashboard", true)
                         .successHandler(oauth2SuccessHandler)
                 )
                 /* Handles the logout logic for both JWT and OAuth */
