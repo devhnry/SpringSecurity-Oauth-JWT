@@ -71,6 +71,11 @@ public class AuthorisationServiceImpl implements AuthorisationService {
                return response;
             }
 
+            Optional<AuthToken> existingToken = tokenRepository.findTokenByUser(existingUser.get().getUsername());
+            if(existingToken.isPresent()){
+                authToken = existingToken.get();
+            }
+
             appUser = existingUser.get();
             if(securityPasswordEncoder.passwordEncoder().matches(loginRequestDto.getPassword(), appUser.getPassword())){
                 authenticationManager.authenticate(

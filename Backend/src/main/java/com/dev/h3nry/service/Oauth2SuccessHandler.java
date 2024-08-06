@@ -46,6 +46,7 @@ public class Oauth2SuccessHandler implements AuthenticationSuccessHandler {
         /* Retrieve the client registration ID (e.g., "gitlab", "github", "google") */
         String clientRegistrationId = oauthToken.getAuthorizedClientRegistrationId();
 
+        String token = request.getHeader("Authorization").substring(7);
         /* Gets the OauthUser from Authentication */
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
 

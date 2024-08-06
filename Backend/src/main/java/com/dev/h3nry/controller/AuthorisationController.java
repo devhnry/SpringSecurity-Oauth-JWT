@@ -19,7 +19,7 @@ public class AuthorisationController {
 
     private final AuthorisationService authorisationService;
 
-    @GetMapping("/dashboard")
+    @GetMapping("/api/v1/dashboard")
     public ResponseEntity<String> getAuthorisation() {
         return ResponseEntity.ok("Welcome to this Demo APPLICATION");
     }
@@ -38,7 +38,7 @@ public class AuthorisationController {
     }
 
     /**
-     * Login Up Controller for JWT Authentication
+     * Login Controller for JWT Authentication
      * @param loginRequest LoginRequestDto that takes email, password.
      * */
     @PostMapping("/auth/login")
@@ -52,8 +52,51 @@ public class AuthorisationController {
     }
 
     /**
+     * Login Controller for OAuth2 Authentication -- GITHUB
+     * @param loginRequest Authentication of the Oauth2 Provider
+     * */
+    @PostMapping("/github/login")
+    public ResponseEntity<DefaultResponseDto<AuthSuccessResponseDto>> githubLogin(
+            @RequestBody LoginRequestDto loginRequest){
+        DefaultResponseDto<AuthSuccessResponseDto> response = authorisationService.login(loginRequest);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+
+    }
+
+
+    /**
+     * Login Controller for OAuth2 Authentication -- GITLAB
+     * @param loginRequest Authentication of the Oauth2 Provider
+     * */
+    @PostMapping("/gitlab/login")
+    public ResponseEntity<DefaultResponseDto<AuthSuccessResponseDto>> gitlabLogin(
+            @RequestBody LoginRequestDto loginRequest){
+        DefaultResponseDto<AuthSuccessResponseDto> response = authorisationService.login(loginRequest);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+
+    }
+
+    /**
+     * Login Controller for OAuth2 Authentication -- GOOGLE
+     * @param loginRequest Authentication of the Oauth2 Provider
+     * */
+    @PostMapping("/google/login")
+    public ResponseEntity<DefaultResponseDto<AuthSuccessResponseDto>> googleLogin(
+            @RequestBody LoginRequestDto loginRequest){
+        DefaultResponseDto<AuthSuccessResponseDto> response = authorisationService.login(loginRequest);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+
+    }
+
+    /**
      * Returns Success Message as well as Tokens for Oauth Authorisation
-     * @param authentication LoginRequestDto that takes email, password.
+     * @param authentication Authentication of the Oauth2 Provider
      * */
     @GetMapping("/success")
     public ResponseEntity<DefaultResponseDto<AuthSuccessResponseDto>> profile(Authentication authentication) {

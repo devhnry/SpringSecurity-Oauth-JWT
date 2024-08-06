@@ -41,7 +41,7 @@ public class JwtService{
         return Jwts.builder()
                 .claim("userID", user.getUserId())
                 .claim("username", user.getUsername())
-                .setSubject(user.getUsername())
+                .setSubject(user.getEmail())
                 .setIssuedAt(Date.from(Instant.now()))
                 .setExpiration(Date.from(Instant.now().plus(24, ChronoUnit.HOURS)))
                 .signWith(HS256, secretKey)

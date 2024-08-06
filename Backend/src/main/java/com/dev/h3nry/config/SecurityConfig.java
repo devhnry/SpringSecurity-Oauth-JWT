@@ -24,6 +24,7 @@ public class SecurityConfig {
     private final JwtSecurityFilter jwtSecurityFilter;
     private final Oauth2SuccessHandler oauth2SuccessHandler;
     private final LogOutHandler logOutHandler;
+    private final JwtToUserConverter jwtToUserConverter;
 
     /**
      * Security configuration for HTTP requests, session management, and login/logout handling.
@@ -34,21 +35,15 @@ public class SecurityConfig {
 
                 /* Allow unrestricted access to certain endpoints */
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/", "/login**", "/error**").permitAll()
+                        .requestMatchers("/github/login**","/gitlab/login**","/goggle/login**", "/error**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
-
                 /* Manage session creation policy for JWT-based authentication */
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(securityAuthenticationProvider.authenticationProvider())
                 .addFilterBefore(jwtSecurityFilter, UsernamePasswordAuthenticationFilter.class)
 
-                /* Configure OAuth2 login and success handling */
-                .oauth2Login(oauth2login -> oauth2login
-                        .defaultSuccessUrl("/dashboard", true)
-                        .successHandler(oauth2SuccessHandler)
-                )
                 /* Handles the logout logic for both JWT and OAuth */
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login")
