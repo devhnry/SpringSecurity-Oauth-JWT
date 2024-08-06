@@ -1,9 +1,6 @@
 package com.dev.h3nry.controller;
 
-import com.dev.h3nry.dto.AuthSuccessResponseDto;
-import com.dev.h3nry.dto.DefaultResponseDto;
-import com.dev.h3nry.dto.LoginRequestDto;
-import com.dev.h3nry.dto.SignUpRequestDto;
+import com.dev.h3nry.dto.*;
 import com.dev.h3nry.entity.AuthToken;
 import com.dev.h3nry.repository.TokenRepository;
 import com.dev.h3nry.service.AuthorisationService;
@@ -31,10 +28,10 @@ public class AuthorisationController {
      * Sign Up Controller for JWT Authentication
      * @param signupRequest SignUpRequestDto that takes email, password, and username
      * */
-    @PostMapping("/signup")
-    public ResponseEntity<DefaultResponseDto<AuthSuccessResponseDto>> signup(
+    @PostMapping("/auth/signup")
+    public ResponseEntity<DefaultResponseDto<AppUserDto>> signup(
             @RequestBody SignUpRequestDto signupRequest){
-        DefaultResponseDto<AuthSuccessResponseDto> response = authorisationService.signup(signupRequest);
+        DefaultResponseDto<AppUserDto> response = authorisationService.signup(signupRequest);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(response);
@@ -44,7 +41,7 @@ public class AuthorisationController {
      * Login Up Controller for JWT Authentication
      * @param loginRequest LoginRequestDto that takes email, password.
      * */
-    @PostMapping("/login")
+    @PostMapping("/auth/login")
     public ResponseEntity<DefaultResponseDto<AuthSuccessResponseDto>> login(
             @RequestBody LoginRequestDto loginRequest){
         DefaultResponseDto<AuthSuccessResponseDto> response = authorisationService.login(loginRequest);

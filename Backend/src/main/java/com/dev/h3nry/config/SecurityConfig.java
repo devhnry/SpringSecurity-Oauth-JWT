@@ -35,6 +35,7 @@ public class SecurityConfig {
                 /* Allow unrestricted access to certain endpoints */
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/", "/login**", "/error**").permitAll()
+                        .requestMatchers("/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
 

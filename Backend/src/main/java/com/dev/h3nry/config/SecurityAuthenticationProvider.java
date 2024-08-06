@@ -16,7 +16,7 @@ public class SecurityAuthenticationProvider {
     public org.springframework.security.authentication.AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder.getPasswordEncoder());
+        authProvider.setPasswordEncoder(passwordEncoder.passwordEncoder());
         return authProvider;
     }
 }

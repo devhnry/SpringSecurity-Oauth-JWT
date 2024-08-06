@@ -34,18 +34,18 @@ public class AppUser implements UserDetails {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(name = "avatar_url", nullable = false, unique = true)
+    @Column(name = "avatar_url")
     private String avatarUrl;
 
     @Builder.Default
     private Boolean isActive = true;
 
     /* This will allow us to easily use the API for GitLab*/
-    @Column(name = "gitlab_id", nullable = false, unique = true)
+    @Column(name = "gitlab_id", unique = true)
     private String gitLabId;
 
     /* This will allow us to easily use the API for GitHub */
-    @Column(name = "github_id", nullable = false, unique = true)
+    @Column(name = "github_id", unique = true)
     private String gitHubId;
 
     @CreationTimestamp
