@@ -4,12 +4,16 @@ import com.dev.h3nry.dto.*;
 import com.dev.h3nry.entity.AuthToken;
 import com.dev.h3nry.repository.TokenRepository;
 import com.dev.h3nry.service.AuthorisationService;
+import com.dev.h3nry.service.OAuth2HandlerService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Optional;
 
 @RestController
@@ -18,6 +22,7 @@ import java.util.Optional;
 public class AuthorisationController {
 
     private final AuthorisationService authorisationService;
+    private final OAuth2HandlerService oAuth2HandlerService;
 
     @GetMapping("/api/v1/dashboard")
     public ResponseEntity<String> getAuthorisation() {
@@ -53,16 +58,20 @@ public class AuthorisationController {
 
     /**
      * Login Controller for OAuth2 Authentication -- GITHUB
-     * @param loginRequest Authentication of the Oauth2 Provider
      * */
-    @PostMapping("/github/login")
-    public ResponseEntity<DefaultResponseDto<AuthSuccessResponseDto>> githubLogin(
-            @RequestBody LoginRequestDto loginRequest){
-        DefaultResponseDto<AuthSuccessResponseDto> response = authorisationService.login(loginRequest);
+    @GetMapping("/github/login")
+    public ResponseEntity<String> githubLogin(HttpServletResponse response) throws URISyntaxException, IOException, InterruptedException {
+        oAuth2HandlerService.githubLogin(response);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(response);
+                .body("Done");
 
+    }
+
+    @GetMapping("/login/oauth2/code/github")
+    public ResponseEntity<String> handleGitHubRedirect(@RequestParam String code, @RequestParam String state) throws URISyntaxException, IOException, InterruptedException {
+        oAuth2HandlerService.handleGithubRedirect(code, state);
+        return ResponseEntity.status(200).body("Done Stage Two");
     }
 
 
