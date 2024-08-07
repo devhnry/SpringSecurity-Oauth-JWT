@@ -68,17 +68,18 @@ public class AuthorisationController {
 
     }
 
+    /**
+     * Controller to handle OAuth2 Authentication Redirect -- GITHUB
+     */
     @GetMapping("/login/oauth2/code/github")
-    public ResponseEntity<String> handleGitHubRedirect(@RequestParam String code, @RequestParam String state) throws URISyntaxException, IOException, InterruptedException {
-        oAuth2HandlerService.handleGithubRedirect(code, state);
-        return ResponseEntity.status(200).body("Done Stage Two");
+    public ResponseEntity<DefaultResponseDto<AuthSuccessResponseDto>> handleGitHubRedirect(@RequestParam String code, @RequestParam String state, HttpServletResponse response) throws URISyntaxException, IOException, InterruptedException {
+        DefaultResponseDto<AuthSuccessResponseDto> githubResponse = oAuth2HandlerService.handleGithubRedirect(code, state, response);
+        return ResponseEntity.status(200).body(githubResponse);
     }
 
-
     /**
-     * Login Controller for OAuth2 Authentication -- GITLAB
-     * @param loginRequest Authentication of the Oauth2 Provider
-     * */
+     * Controller for GITLAB OAuth2 Authentication
+     */
     @PostMapping("/gitlab/login")
     public ResponseEntity<DefaultResponseDto<AuthSuccessResponseDto>> gitlabLogin(
             @RequestBody LoginRequestDto loginRequest){
@@ -90,9 +91,8 @@ public class AuthorisationController {
     }
 
     /**
-     * Login Controller for OAuth2 Authentication -- GOOGLE
-     * @param loginRequest Authentication of the Oauth2 Provider
-     * */
+     * Controller for GOOGLE OAuth2 Authentication
+     */
     @PostMapping("/google/login")
     public ResponseEntity<DefaultResponseDto<AuthSuccessResponseDto>> googleLogin(
             @RequestBody LoginRequestDto loginRequest){
@@ -100,19 +100,5 @@ public class AuthorisationController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(response);
-
     }
-
-    /**
-     * Returns Success Message as well as Tokens for Oauth Authorisation
-     * @param authentication Authentication of the Oauth2 Provider
-     * */
-    @GetMapping("/success")
-    public ResponseEntity<DefaultResponseDto<AuthSuccessResponseDto>> profile(Authentication authentication) {
-        DefaultResponseDto<AuthSuccessResponseDto> response = authorisationService.authoriseSuccess(authentication);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(response);
-    }
-
 }

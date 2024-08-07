@@ -1,12 +1,9 @@
 package com.dev.h3nry.config;
 
-import com.dev.h3nry.service.LogOutHandler;
-import com.dev.h3nry.service.Oauth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -35,6 +32,7 @@ public class SecurityConfig {
                 /* Allow unrestricted access to certain endpoints */
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/github/login**","/gitlab/login**","/goggle/login**", "/error**").permitAll()
+                        .requestMatchers("/login/oauth2/code/github").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
@@ -46,7 +44,6 @@ public class SecurityConfig {
                 /* Handles the logout logic for both JWT and OAuth */
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login")
-                        .addLogoutHandler(logOutHandler)
                         .logoutSuccessHandler((request, response, authentication) -> {
                             SecurityContextHolder.clearContext();
                         })

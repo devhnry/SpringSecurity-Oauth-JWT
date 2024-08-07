@@ -25,20 +25,17 @@ public class AppUser implements UserDetails {
 
     private String name;
 
-    @Column(name = "username", nullable = false, unique = true)
+    @Column(name = "username", unique = true)
     private String username;
 
     @Column(name = "password", unique = true)
     private String password;
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "avatar_url")
     private String avatarUrl;
-
-    @Builder.Default
-    private Boolean isActive = true;
 
     /* This will allow us to easily use the API for GitLab*/
     @Column(name = "gitlab_id", unique = true)

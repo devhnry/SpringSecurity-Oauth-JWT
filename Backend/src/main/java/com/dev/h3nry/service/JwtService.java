@@ -32,15 +32,16 @@ public class JwtService{
         this.secretKey = new SecretKeySpec(secretKeyBytes, String.valueOf(HS256));
     }
 
-    public String createToken(AppUser user) {
+    public String createToken(AppUser user, String oauthToken) {
         log.info("Generating JWT token");
-        return generateToken(user);
+        return generateToken(user, oauthToken);
     }
 
-    private String generateToken(AppUser user) {
+    private String generateToken(AppUser user, String token) {
         return Jwts.builder()
                 .claim("userID", user.getUserId())
                 .claim("username", user.getUsername())
+                .claim("oauth_token", token)
                 .setSubject(user.getEmail())
                 .setIssuedAt(Date.from(Instant.now()))
                 .setExpiration(Date.from(Instant.now().plus(24, ChronoUnit.HOURS)))

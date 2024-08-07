@@ -34,29 +34,6 @@ public class AuthorisationServiceImpl implements AuthorisationService {
     private final AuthenticationManager authenticationManager;
 
     @Override
-    public DefaultResponseDto<AuthSuccessResponseDto> authoriseSuccess(Authentication authentication) {
-        DefaultResponseDto<AuthSuccessResponseDto> response = new DefaultResponseDto<>();
-
-        AuthSuccessResponseDto authSuccessResponseDto = new AuthSuccessResponseDto();
-        Optional<AuthToken> authToken = tokenRepository.findTokenByUser(authentication.getName());
-
-        // Checks for the token...
-        if(authToken.isPresent()){
-            AuthToken auth = authToken.get();
-            authSuccessResponseDto = new AuthSuccessResponseDto();
-            authSuccessResponseDto.setAccessToken(auth.getAccessToken());
-            authSuccessResponseDto.setRefreshToken(auth.getRefreshToken());
-        }
-
-        // Returns the AccessToken and Refresh Token...
-        response.setStatusCode(HttpStatus.CREATED.value());
-        response.setMessage("Successfully Authenticated");
-        response.setData(authSuccessResponseDto);
-
-        return response;
-    }
-
-    @Override
     public DefaultResponseDto<AuthSuccessResponseDto> login(LoginRequestDto loginRequestDto) {
         DefaultResponseDto<AuthSuccessResponseDto> response = new DefaultResponseDto<>();
         AuthSuccessResponseDto authSuccessResponseDto = new AuthSuccessResponseDto();
@@ -85,7 +62,7 @@ public class AuthorisationServiceImpl implements AuthorisationService {
                 response.setStatusCode(HttpStatus.OK.value());
                 response.setMessage("Successfully Logged in");
 
-                String accessToken = jwtService.createToken(appUser);
+                String accessToken = jwtService.createToken(appUser, "");
                 String refreshToken = jwtService.generateRefreshToken(new HashMap<>(), appUser);
 
                 authToken.setUser(appUser);
